@@ -1,26 +1,183 @@
 @import "tailwindcss";
 
+@theme {
+  --color-ink: #06040d;
+  --color-night: #0c0819;
+  --color-plum: #160f2c;
+  --color-plum-2: #21173f;
+  --color-line: rgba(201, 184, 255, 0.14);
+  --color-violet: #9d7bff;
+  --color-violet-deep: #6d4ae0;
+  --color-lavender: #d4c6ff;
+  --color-mist: #a79fc6;
+  --color-haze: #6f6890;
+  --color-gold: #e3c88f;
+  --color-gold-dim: #a8925f;
+  --color-paper: #f4efff;
+
+  --color-heart: #f29ad6;
+  --color-head: #8fdcc9;
+  --color-life: #a3b6ff;
+  --color-fate: #e8cb8c;
+
+  --font-display: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html[data-motion="reduce"] {
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(157, 123, 255, 0.4);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- Atmosphere ---------- */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.sky {
+  background:
+    radial-gradient(60% 50% at 78% 18%, rgba(109, 74, 224, 0.28), transparent 70%),
+    radial-gradient(40% 40% at 10% 90%, rgba(227, 200, 143, 0.06), transparent 70%),
+    linear-gradient(180deg, #0c0819 0%, #06040d 100%);
+}
+
+.hairline {
+  background: linear-gradient(90deg, transparent, var(--color-line) 15%, var(--color-line) 85%, transparent);
+  height: 1px;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Selected palm line: a slow travelling shimmer along the stroke */
+@keyframes line-flow {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+.line-flow {
+  stroke-dasharray: 18 22;
+  animation: line-flow 3.2s linear infinite;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+.drift {
+  animation: drift 9s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit 90s linear infinite;
+}
+
+html[data-motion="reduce"] .line-flow,
+html[data-motion="reduce"] .drift,
+html[data-motion="reduce"] .twinkle,
+html[data-motion="reduce"] .orbit {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line-flow,
+  .drift,
+  .twinkle,
+  .orbit {
+    animation: none;
+  }
+}
+
+/* Native dialog */
+dialog::backdrop {
+  background: rgba(6, 4, 13, 0.78);
+  backdrop-filter: blur(6px);
+}
+
+/* Visually hidden but available to assistive tech */
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
